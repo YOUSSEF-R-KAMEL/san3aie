@@ -1,0 +1,64 @@
+<div class="min-h-[calc(100vh-73px)] bg-slate-50 px-6 py-12">
+  <div class="mx-auto max-w-md">
+    <div class="rounded-3xl bg-white p-8 shadow-lg">
+      <div class="mb-8 text-center">
+        <h1 class="text-3xl font-extrabold text-slate-900">تسجيل الدخول</h1>
+
+        <p class="mt-2 text-slate-500">ادخل إلى حسابك</p>
+      </div>
+
+      <form (ngSubmit)="login()" class="space-y-5">
+        <div>
+          <label class="mb-2 block font-semibold text-slate-700">
+            رقم الهاتف
+          </label>
+
+          <input
+            type="tel"
+            name="phone"
+            [(ngModel)]="phone"
+            placeholder="01xxxxxxxxx"
+            class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+          />
+        </div>
+
+        <div>
+          <label class="mb-2 block font-semibold text-slate-700">
+            كلمة المرور
+          </label>
+
+          <input
+            type="password"
+            name="password"
+            [(ngModel)]="password"
+            placeholder="••••••••"
+            class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+          />
+        </div>
+
+        @if (error) {
+          <div
+            class="mb-5 rounded-xl bg-red-50 px-4 py-3 text-sm font-semibold text-red-600"
+          >
+            {{ error }}
+          </div>
+        }
+
+        <button
+          type="submit"
+          [disabled]="loading"
+          class="w-full rounded-xl bg-emerald-600 px-4 py-3 font-bold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {{ loading ? "جاري تسجيل الدخول..." : "تسجيل الدخول" }}
+        </button>
+      </form>
+
+      <p class="mt-6 text-center text-sm text-slate-500">
+        ليس لديك حساب؟
+        <a routerLink="/register" class="font-bold text-emerald-600">
+          إنشاء حساب
+        </a>
+      </p>
+    </div>
+  </div>
+</div>

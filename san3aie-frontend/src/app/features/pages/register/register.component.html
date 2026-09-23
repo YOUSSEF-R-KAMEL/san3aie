@@ -1,0 +1,417 @@
+<div class="min-h-[calc(100vh-73px)] bg-slate-50 px-4 py-8 sm:px-6 sm:py-12">
+  <div class="mx-auto max-w-2xl">
+    <div class="rounded-3xl bg-white p-5 shadow-lg sm:p-8">
+      <div class="mb-8 text-center">
+        <h1 class="text-2xl font-extrabold text-slate-900 sm:text-3xl">
+          إنشاء حساب
+        </h1>
+
+        <p class="mt-2 text-sm text-slate-500 sm:text-base">
+          انضم إلى منصة صنايعي
+        </p>
+      </div>
+
+      <form
+        (ngSubmit)="register()"
+        #registerForm="ngForm"
+        novalidate
+        class="space-y-5"
+      >
+        <div>
+          <label for="name" class="mb-2 block font-semibold text-slate-700">
+            الاسم
+          </label>
+
+          <input
+            id="name"
+            type="text"
+            name="name"
+            [(ngModel)]="name"
+            #nameModel="ngModel"
+            required
+            minlength="3"
+            maxlength="255"
+            autocomplete="name"
+            placeholder="اكتب اسمك"
+            [attr.aria-invalid]="
+              nameModel.invalid && (nameModel.touched || submitted)
+            "
+            [attr.aria-describedby]="
+              nameModel.invalid && (nameModel.touched || submitted)
+                ? 'name-error'
+                : null
+            "
+            class="w-full rounded-xl border px-4 py-3 outline-none transition"
+            [class.border-red-400]="
+              nameModel.invalid && (nameModel.touched || submitted)
+            "
+            [class.bg-red-50]="
+              nameModel.invalid && (nameModel.touched || submitted)
+            "
+            [class.border-slate-300]="
+              !(nameModel.invalid && (nameModel.touched || submitted))
+            "
+            [class.focus:border-emerald-500]="true"
+            [class.focus:ring-2]="true"
+            [class.focus:ring-emerald-100]="true"
+          />
+
+          @if (nameModel.invalid && (nameModel.touched || submitted)) {
+            <p id="name-error" class="mt-2 text-sm font-semibold text-red-600">
+              @if (nameModel.errors?.["required"]) {
+                الاسم مطلوب.
+              } @else if (nameModel.errors?.["minlength"]) {
+                الاسم يجب أن يكون 3 أحرف على الأقل.
+              } @else if (nameModel.errors?.["maxlength"]) {
+                الاسم طويل جدًا.
+              }
+            </p>
+          }
+        </div>
+
+        <div>
+          <label for="phone" class="mb-2 block font-semibold text-slate-700">
+            رقم الهاتف
+          </label>
+
+          <input
+            id="phone"
+            type="tel"
+            name="phone"
+            [(ngModel)]="phone"
+            #phoneModel="ngModel"
+            required
+            pattern="^01[0125][0-9]{8}$"
+            maxlength="11"
+            inputmode="numeric"
+            autocomplete="tel"
+            placeholder="01xxxxxxxxx"
+            [attr.aria-invalid]="
+              phoneModel.invalid && (phoneModel.touched || submitted)
+            "
+            [attr.aria-describedby]="
+              phoneModel.invalid && (phoneModel.touched || submitted)
+                ? 'phone-error'
+                : null
+            "
+            class="w-full rounded-xl border px-4 py-3 outline-none transition"
+            [class.border-red-400]="
+              phoneModel.invalid && (phoneModel.touched || submitted)
+            "
+            [class.bg-red-50]="
+              phoneModel.invalid && (phoneModel.touched || submitted)
+            "
+            [class.border-slate-300]="
+              !(phoneModel.invalid && (phoneModel.touched || submitted))
+            "
+            [class.focus:border-emerald-500]="true"
+            [class.focus:ring-2]="true"
+            [class.focus:ring-emerald-100]="true"
+          />
+
+          @if (phoneModel.invalid && (phoneModel.touched || submitted)) {
+            <p id="phone-error" class="mt-2 text-sm font-semibold text-red-600">
+              @if (phoneModel.errors?.["required"]) {
+                رقم الهاتف مطلوب.
+              } @else if (phoneModel.errors?.["pattern"]) {
+                من فضلك أدخل رقم هاتف مصري صحيح مثل 01012345678.
+              }
+            </p>
+          }
+        </div>
+
+        <div>
+          <span class="mb-2 block font-semibold text-slate-700">
+            نوع الحساب
+          </span>
+
+          <div
+            class="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4"
+            role="group"
+            aria-label="نوع الحساب"
+          >
+            <button
+              type="button"
+              (click)="role = 'customer'"
+              [attr.aria-pressed]="role === 'customer'"
+              [class.border-emerald-500]="role === 'customer'"
+              [class.bg-emerald-50]="role === 'customer'"
+              [class.border-slate-200]="role !== 'customer'"
+              class="rounded-2xl border-2 p-5 text-center transition hover:border-emerald-300"
+            >
+              <div class="text-3xl" aria-hidden="true">👤</div>
+
+              <div class="mt-2 font-bold text-slate-800">أبحث عن صنايعي</div>
+            </button>
+
+            <button
+              type="button"
+              (click)="role = 'worker'"
+              [attr.aria-pressed]="role === 'worker'"
+              [class.border-emerald-500]="role === 'worker'"
+              [class.bg-emerald-50]="role === 'worker'"
+              [class.border-slate-200]="role !== 'worker'"
+              class="rounded-2xl border-2 p-5 text-center transition hover:border-emerald-300"
+            >
+              <div class="text-3xl" aria-hidden="true">🧑‍🔧</div>
+
+              <div class="mt-2 font-bold text-slate-800">أنا صنايعي</div>
+            </button>
+          </div>
+        </div>
+
+        @if (role === "worker") {
+          <div>
+            <label
+              for="categoryId"
+              class="mb-2 block font-semibold text-slate-700"
+            >
+              المهنة
+            </label>
+
+            <select
+              id="categoryId"
+              name="categoryId"
+              [(ngModel)]="categoryId"
+              #categoryModel="ngModel"
+              [required]="role === 'worker'"
+              [attr.aria-invalid]="
+                categoryModel.invalid && (categoryModel.touched || submitted)
+              "
+              [attr.aria-describedby]="
+                categoryModel.invalid && (categoryModel.touched || submitted)
+                  ? 'category-error'
+                  : null
+              "
+              class="w-full rounded-xl border bg-white px-4 py-3 outline-none transition"
+              [class.border-red-400]="
+                categoryModel.invalid && (categoryModel.touched || submitted)
+              "
+              [class.bg-red-50]="
+                categoryModel.invalid && (categoryModel.touched || submitted)
+              "
+              [class.border-slate-300]="
+                !(categoryModel.invalid && (categoryModel.touched || submitted))
+              "
+            >
+              <option [ngValue]="null">اختر المهنة</option>
+
+              @for (category of categories; track category.id) {
+                <option [ngValue]="category.id">
+                  {{ category.icon }} {{ category.name }}
+                </option>
+              }
+            </select>
+
+            @if (
+              categoryModel.invalid && (categoryModel.touched || submitted)
+            ) {
+              <p
+                id="category-error"
+                class="mt-2 text-sm font-semibold text-red-600"
+              >
+                من فضلك اختر المهنة.
+              </p>
+            }
+          </div>
+        }
+
+        <div>
+          <label for="areaId" class="mb-2 block font-semibold text-slate-700">
+            المنطقة
+          </label>
+
+          <select
+            id="areaId"
+            name="areaId"
+            [(ngModel)]="areaId"
+            #areaModel="ngModel"
+            required
+            [attr.aria-invalid]="
+              areaModel.invalid && (areaModel.touched || submitted)
+            "
+            [attr.aria-describedby]="
+              areaModel.invalid && (areaModel.touched || submitted)
+                ? 'area-error'
+                : null
+            "
+            class="w-full rounded-xl border bg-white px-4 py-3 outline-none transition"
+            [class.border-red-400]="
+              areaModel.invalid && (areaModel.touched || submitted)
+            "
+            [class.bg-red-50]="
+              areaModel.invalid && (areaModel.touched || submitted)
+            "
+            [class.border-slate-300]="
+              !(areaModel.invalid && (areaModel.touched || submitted))
+            "
+          >
+            <option [ngValue]="null">اختر المنطقة</option>
+
+            @for (area of areas; track area.id) {
+              <option [ngValue]="area.id">
+                {{ area.name }}
+              </option>
+            }
+          </select>
+
+          @if (areaModel.invalid && (areaModel.touched || submitted)) {
+            <p id="area-error" class="mt-2 text-sm font-semibold text-red-600">
+              من فضلك اختر المنطقة.
+            </p>
+          }
+        </div>
+
+        <div>
+          <label for="password" class="mb-2 block font-semibold text-slate-700">
+            كلمة المرور
+          </label>
+
+          <input
+            id="password"
+            type="password"
+            name="password"
+            [(ngModel)]="password"
+            #passwordModel="ngModel"
+            required
+            minlength="6"
+            autocomplete="new-password"
+            placeholder="••••••••"
+            [attr.aria-invalid]="
+              passwordModel.invalid && (passwordModel.touched || submitted)
+            "
+            [attr.aria-describedby]="
+              passwordModel.invalid && (passwordModel.touched || submitted)
+                ? 'password-error'
+                : null
+            "
+            class="w-full rounded-xl border px-4 py-3 outline-none transition"
+            [class.border-red-400]="
+              passwordModel.invalid && (passwordModel.touched || submitted)
+            "
+            [class.bg-red-50]="
+              passwordModel.invalid && (passwordModel.touched || submitted)
+            "
+            [class.border-slate-300]="
+              !(passwordModel.invalid && (passwordModel.touched || submitted))
+            "
+          />
+
+          @if (passwordModel.invalid && (passwordModel.touched || submitted)) {
+            <p
+              id="password-error"
+              class="mt-2 text-sm font-semibold text-red-600"
+            >
+              @if (passwordModel.errors?.["required"]) {
+                كلمة المرور مطلوبة.
+              } @else if (passwordModel.errors?.["minlength"]) {
+                كلمة المرور يجب أن تكون 6 أحرف على الأقل.
+              }
+            </p>
+          }
+        </div>
+
+        <div>
+          <label
+            for="passwordConfirmation"
+            class="mb-2 block font-semibold text-slate-700"
+          >
+            تأكيد كلمة المرور
+          </label>
+
+          <input
+            id="passwordConfirmation"
+            type="password"
+            name="passwordConfirmation"
+            [(ngModel)]="passwordConfirmation"
+            #passwordConfirmationModel="ngModel"
+            required
+            autocomplete="new-password"
+            placeholder="••••••••"
+            [attr.aria-invalid]="
+              (passwordConfirmationModel.invalid ||
+                passwordConfirmation !== password) &&
+              (passwordConfirmationModel.touched || submitted)
+            "
+            [attr.aria-describedby]="
+              (passwordConfirmationModel.invalid ||
+                passwordConfirmation !== password) &&
+              (passwordConfirmationModel.touched || submitted)
+                ? 'password-confirmation-error'
+                : null
+            "
+            class="w-full rounded-xl border px-4 py-3 outline-none transition"
+            [class.border-red-400]="
+              (passwordConfirmationModel.invalid ||
+                passwordConfirmation !== password) &&
+              (passwordConfirmationModel.touched || submitted)
+            "
+            [class.bg-red-50]="
+              (passwordConfirmationModel.invalid ||
+                passwordConfirmation !== password) &&
+              (passwordConfirmationModel.touched || submitted)
+            "
+            [class.border-slate-300]="
+              !(
+                (passwordConfirmationModel.invalid ||
+                  passwordConfirmation !== password) &&
+                (passwordConfirmationModel.touched || submitted)
+              )
+            "
+          />
+
+          @if (
+            passwordConfirmationModel.invalid &&
+            (passwordConfirmationModel.touched || submitted)
+          ) {
+            <p
+              id="password-confirmation-error"
+              class="mt-2 text-sm font-semibold text-red-600"
+            >
+              تأكيد كلمة المرور مطلوب.
+            </p>
+          } @else if (
+            passwordConfirmation !== password &&
+            (passwordConfirmationModel.touched || submitted)
+          ) {
+            <p
+              id="password-confirmation-error"
+              class="mt-2 text-sm font-semibold text-red-600"
+            >
+              كلمتا المرور غير متطابقتين.
+            </p>
+          }
+        </div>
+
+        @if (error) {
+          <div
+            class="rounded-xl bg-red-50 px-4 py-3 text-sm font-semibold text-red-600"
+            role="alert"
+          >
+            {{ error }}
+          </div>
+        }
+
+        <button
+          type="submit"
+          [disabled]="loading"
+          [attr.aria-busy]="loading"
+          class="w-full rounded-xl bg-emerald-600 px-4 py-3 font-bold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {{ loading ? "جاري إنشاء الحساب..." : "إنشاء الحساب" }}
+        </button>
+      </form>
+
+      <p class="mt-6 text-center text-sm text-slate-500">
+        لديك حساب بالفعل؟
+
+        <a
+          routerLink="/login"
+          class="font-bold text-emerald-600 hover:text-emerald-700"
+        >
+          تسجيل الدخول
+        </a>
+      </p>
+    </div>
+  </div>
+</div>

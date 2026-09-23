@@ -1,0 +1,31 @@
+<div
+  class="fixed left-4 top-20 z-[100] flex w-[calc(100%-2rem)] max-w-sm flex-col gap-3"
+  aria-live="polite"
+  aria-atomic="true"
+>
+  @for (toast of (toastService.toasts$ | async); track toast.id) {
+
+    <div
+      class="flex items-center justify-between gap-4 rounded-2xl px-4 py-4 shadow-lg"
+      [class.bg-emerald-600]="toast.type === 'success'"
+      [class.bg-red-600]="toast.type === 'error'"
+      [class.bg-slate-800]="toast.type === 'info'"
+    >
+
+      <p class="text-sm font-bold text-white">
+        {{ toast.message }}
+      </p>
+
+      <button
+        type="button"
+        (click)="toastService.remove(toast.id)"
+        class="text-xl text-white/80 hover:text-white"
+        aria-label="إغلاق"
+      >
+        ×
+      </button>
+
+    </div>
+
+  }
+</div>

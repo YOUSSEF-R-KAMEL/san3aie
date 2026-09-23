@@ -1,0 +1,252 @@
+<section class="bg-slate-50 px-4 py-8 sm:px-6 lg:px-8">
+  <div class="mx-auto max-w-7xl">
+    <div class="mb-8">
+      <h1 class="text-3xl font-extrabold text-slate-900">الصنايعية</h1>
+
+      <p class="mt-2 text-slate-500">
+        ابحث عن الصنايعي المناسب حسب المهنة والمنطقة والتقييم.
+      </p>
+    </div>
+
+    <div class="rounded-3xl bg-white p-5 shadow-sm">
+      <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div>
+          <label
+            for="search"
+            class="mb-2 block text-sm font-bold text-slate-700"
+          >
+            بحث
+          </label>
+
+          <input
+            id="search"
+            [(ngModel)]="search"
+            type="text"
+            placeholder="اسم الصنايعي..."
+            class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-emerald-500"
+          />
+        </div>
+
+        <div>
+          <label
+            for="category"
+            class="mb-2 block text-sm font-bold text-slate-700"
+          >
+            المهنة
+          </label>
+
+          <select
+            id="category"
+            [(ngModel)]="categoryId"
+            class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-emerald-500"
+          >
+            <option [ngValue]="null">كل المهن</option>
+
+            @for (category of categories; track category.id) {
+              <option [ngValue]="category.id">
+                {{ category.icon }} {{ category.name }}
+              </option>
+            }
+          </select>
+        </div>
+
+        <div>
+          <label for="area" class="mb-2 block text-sm font-bold text-slate-700">
+            المنطقة
+          </label>
+
+          <select
+            id="area"
+            [(ngModel)]="areaId"
+            class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-emerald-500"
+          >
+            <option [ngValue]="null">كل المناطق</option>
+
+            @for (area of areas; track area.id) {
+              <option [ngValue]="area.id">
+                {{ area.name }}
+              </option>
+            }
+          </select>
+        </div>
+
+        <div>
+          <label
+            for="rating"
+            class="mb-2 block text-sm font-bold text-slate-700"
+          >
+            التقييم
+          </label>
+
+          <select
+            id="rating"
+            [(ngModel)]="rating"
+            class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-emerald-500"
+          >
+            <option [ngValue]="null">كل التقييمات</option>
+
+            <option [ngValue]="5">5 ⭐ فأعلى</option>
+            <option [ngValue]="4">4 ⭐ فأعلى</option>
+            <option [ngValue]="3">3 ⭐ فأعلى</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="mt-5 flex flex-wrap gap-4">
+        <label class="flex cursor-pointer items-center gap-2">
+          <input type="checkbox" [(ngModel)]="isAvailable" class="h-4 w-4" />
+
+          <span class="text-sm font-semibold text-slate-700"> متاح الآن </span>
+        </label>
+
+        <label class="flex cursor-pointer items-center gap-2">
+          <input type="checkbox" [(ngModel)]="isVerified" class="h-4 w-4" />
+
+          <span class="text-sm font-semibold text-slate-700"> موثق </span>
+        </label>
+
+        <label class="flex cursor-pointer items-center gap-2">
+          <input type="checkbox" [(ngModel)]="isPremium" class="h-4 w-4" />
+
+          <span class="text-sm font-semibold text-slate-700"> Premium </span>
+        </label>
+
+        <label class="flex cursor-pointer items-center gap-2">
+          <input type="checkbox" [(ngModel)]="isFeatured" class="h-4 w-4" />
+
+          <span class="text-sm font-semibold text-slate-700"> Featured </span>
+        </label>
+      </div>
+
+      <div class="mt-5 flex flex-col gap-3 sm:flex-row">
+        <select
+          [(ngModel)]="sort"
+          class="rounded-xl border border-slate-300 px-4 py-3 font-semibold outline-none focus:border-emerald-500"
+        >
+          <option value="newest">الأحدث</option>
+
+          <option value="rating">الأعلى تقييمًا</option>
+
+          <option value="completed_jobs">الأكثر أعمالًا</option>
+
+          <option value="distance">الأقرب</option>
+        </select>
+
+        <button
+          type="button"
+          (click)="loadWorkers()"
+          class="rounded-xl bg-emerald-600 px-6 py-3 font-bold text-white transition hover:bg-emerald-700"
+        >
+          بحث
+        </button>
+
+        <button
+          type="button"
+          (click)="resetFilters()"
+          class="rounded-xl border border-slate-300 px-6 py-3 font-bold text-slate-700 transition hover:bg-slate-50"
+        >
+          إعادة ضبط
+        </button>
+      </div>
+    </div>
+
+    @if (loading) {
+      <div class="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        @for (item of [1, 2, 3, 4, 5, 6]; track item) {
+          <app-worker-skeleton></app-worker-skeleton>
+        }
+      </div>
+    } @else if (error) {
+      <div class="mt-8">
+        <app-error-state
+          [message]="error"
+          (retry)="loadWorkers()"
+        ></app-error-state>
+      </div>
+    } @else if (workers.length === 0) {
+      <div class="mt-8">
+        <app-empty-state
+          title="لا يوجد صنايعية"
+          message="لم نجد صنايعية مطابقين للفلاتر الحالية."
+          icon="🔍"
+        ></app-empty-state>
+      </div>
+    } @else {
+      <div class="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        @for (worker of workers; track worker.id) {
+          <article
+            class="overflow-hidden rounded-3xl bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+          >
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <h2 class="text-xl font-extrabold text-slate-900">
+                  {{ worker.name }}
+                </h2>
+
+                @if (worker.category) {
+                  <p class="mt-1 text-sm font-semibold text-emerald-600">
+                    {{ worker.category.icon }}
+                    {{ worker.category.name }}
+                  </p>
+                }
+              </div>
+
+              @if (worker.is_verified) {
+                <span
+                  class="rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-blue-600"
+                >
+                  موثق ✓
+                </span>
+              }
+            </div>
+
+            <div class="mt-5 space-y-3 text-sm text-slate-600">
+              @if (worker.area) {
+                <p>📍 {{ worker.area.name }}</p>
+              }
+
+              @if (worker.rating !== undefined) {
+                <p>⭐ {{ worker.rating }}</p>
+              }
+
+              @if (worker.completed_jobs !== undefined) {
+                <p>🔧 {{ worker.completed_jobs }} أعمال مكتملة</p>
+              }
+
+              @if (worker.experience_years !== undefined) {
+                <p>🕐 {{ worker.experience_years }} سنة خبرة</p>
+              }
+            </div>
+
+            <div class="mt-5 flex items-center justify-between">
+              @if (worker.is_available) {
+                <span class="text-sm font-bold text-emerald-600">
+                  ● متاح الآن
+                </span>
+              } @else {
+                <span class="text-sm font-bold text-slate-400">
+                  ● غير متاح
+                </span>
+              }
+
+              @if (worker.is_premium) {
+                <span
+                  class="rounded-full bg-amber-50 px-3 py-1 text-xs font-bold text-amber-600"
+                >
+                  Premium
+                </span>
+              }
+            </div>
+
+            <a
+              [routerLink]="['/workers', worker.id]"
+              class="mt-6 block rounded-xl bg-slate-900 px-4 py-3 text-center font-bold text-white transition hover:bg-slate-800"
+            >
+              عرض الملف
+            </a>
+          </article>
+        }
+      </div>
+    }
+  </div>
+</section>

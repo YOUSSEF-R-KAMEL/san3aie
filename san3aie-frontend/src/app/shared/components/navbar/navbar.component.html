@@ -1,0 +1,56 @@
+<nav class="border-b border-slate-200 bg-white" aria-label="التنقل الرئيسي">
+  <div
+    class="mx-auto flex min-h-[72px] max-w-7xl items-center justify-between gap-3 px-4 sm:px-6"
+  >
+    <a
+      routerLink="/"
+      class="shrink-0 text-xl font-extrabold text-emerald-600 transition hover:text-emerald-700 sm:text-2xl"
+      aria-label="صنايعي - الصفحة الرئيسية"
+    >
+      صنايعي 🔧
+    </a>
+
+    <div class="flex items-center gap-1.5 sm:gap-3">
+      @if (!isLoggedIn()) {
+        <a
+          routerLink="/login"
+          class="rounded-xl px-3 py-2 text-sm font-bold text-slate-700 transition hover:bg-slate-100 sm:px-4"
+        >
+          دخول
+        </a>
+
+        <a
+          routerLink="/register"
+          class="rounded-xl bg-emerald-600 px-3 py-2 text-sm font-bold text-white transition hover:bg-emerald-700 sm:px-4"
+        >
+          إنشاء حساب
+        </a>
+      }
+
+      @if (isLoggedIn()) {
+        <a
+          routerLink="/workers"
+          routerLinkActive="text-emerald-600"
+          class="rounded-xl px-3 py-2 text-sm font-bold text-slate-700 transition hover:bg-slate-100 sm:px-4"
+        >
+          الصنايعية
+        </a>
+        <a
+          routerLink="/dashboard"
+          class="rounded-xl px-3 py-2 text-sm font-bold text-slate-700 transition hover:bg-slate-100 sm:px-4"
+        >
+          حسابي
+        </a>
+
+        <button
+          type="button"
+          (click)="logout()"
+          class="rounded-xl bg-slate-900 px-3 py-2 text-sm font-bold text-white transition hover:bg-slate-800 sm:px-4"
+          aria-label="تسجيل الخروج"
+        >
+          خروج
+        </button>
+      }
+    </div>
+  </div>
+</nav>

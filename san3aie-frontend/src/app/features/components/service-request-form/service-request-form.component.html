@@ -1,0 +1,64 @@
+<form (ngSubmit)="submit()" class="space-y-5">
+  <div>
+    <label
+      for="description"
+      class="mb-2 block text-sm font-bold text-slate-700"
+    >
+      تفاصيل الخدمة
+    </label>
+
+    <textarea
+      id="description"
+      name="description"
+      [(ngModel)]="description"
+      rows="5"
+      maxlength="3000"
+      placeholder="مثال: محتاج سباك لإصلاح تسريب مياه في الحمام..."
+      class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-emerald-500"
+    ></textarea>
+
+    @if (
+      submitted &&
+      (description.trim().length < 10 || description.trim().length > 3000)
+    ) {
+      <p class="mt-2 text-sm text-red-500">اكتب تفاصيل الخدمة بشكل أوضح.</p>
+    }
+  </div>
+
+  <div>
+    <label for="location" class="mb-2 block text-sm font-bold text-slate-700">
+      مكان تنفيذ الخدمة
+    </label>
+
+    <input
+      id="location"
+      name="location"
+      [(ngModel)]="location"
+      maxlength="500"
+      placeholder="مثال: شارع جمال عبد الناصر، المرج"
+      class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-emerald-500"
+    />
+
+    @if (
+      submitted && (location.trim().length < 3 || location.trim().length > 500)
+    ) {
+      <p class="mt-2 text-sm text-red-500">اكتب مكان تنفيذ الخدمة.</p>
+    }
+  </div>
+
+  <div class="rounded-xl bg-emerald-50 p-4 text-sm text-emerald-800">
+    سيتم إرسال الطلب إلى
+    <strong>{{ worker.name }}</strong>
+    في مهنة
+    <strong>{{ worker.category?.name }}</strong
+    >.
+  </div>
+
+  <button
+    type="submit"
+    [disabled]="loading"
+    class="w-full rounded-xl bg-emerald-600 px-5 py-3 font-bold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+  >
+    {{ loading ? "جاري إرسال الطلب..." : "إرسال طلب الخدمة" }}
+  </button>
+</form>

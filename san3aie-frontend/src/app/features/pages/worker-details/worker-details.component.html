@@ -1,0 +1,123 @@
+<div class="min-h-screen bg-slate-50 py-8">
+  <div class="mx-auto max-w-5xl px-4">
+    <a
+      routerLink="/workers"
+      class="mb-6 inline-flex items-center gap-2 text-sm font-semibold text-emerald-600 hover:text-emerald-700"
+    >
+      ← العودة للصنايعية
+    </a>
+
+    @if (loading) {
+      <app-loading text="جاري تحميل بيانات الصنايعي..." />
+    }
+
+    @if (!loading && error) {
+      <app-error-state
+        title="تعذر تحميل البيانات"
+        [message]="error"
+        (retry)="loadWorker(worker?.id || 0)"
+      />
+    }
+
+    @if (!loading && !error && worker) {
+      <div
+        class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm"
+      >
+        <div
+          class="bg-gradient-to-l from-emerald-600 to-emerald-500 p-8 text-white"
+        >
+          <div
+            class="flex flex-col gap-6 md:flex-row md:items-center md:justify-between"
+          >
+            <div>
+              <div class="mb-2 flex flex-wrap items-center gap-2">
+                <h1 class="text-3xl font-extrabold">
+                  {{ worker.name }}
+                </h1>
+
+                @if (worker.is_verified) {
+                  <span class="rounded-full bg-white/20 px-3 py-1 text-sm">
+                    ✓ موثّق
+                  </span>
+                }
+              </div>
+
+              @if (worker.category) {
+                <p class="text-emerald-50">
+                  {{ worker.category.icon }}
+                  {{ worker.category.name }}
+                </p>
+              }
+            </div>
+
+            @if (canRequestService()) {
+              <button
+                type="button"
+                (click)="requestService()"
+                class="rounded-xl bg-white px-6 py-3 font-bold text-emerald-700 shadow-sm transition hover:bg-emerald-50"
+              >
+                اطلب خدمة
+              </button>
+            }
+          </div>
+        </div>
+
+        <div class="grid gap-6 p-6 md:grid-cols-3">
+          <div class="rounded-2xl bg-slate-50 p-5">
+            <p class="text-sm text-slate-500">المنطقة</p>
+            <p class="mt-2 font-bold text-slate-900">
+              {{ worker.area?.name || "غير محددة" }}
+            </p>
+          </div>
+
+          <div class="rounded-2xl bg-slate-50 p-5">
+            <p class="text-sm text-slate-500">سنوات الخبرة</p>
+            <p class="mt-2 font-bold text-slate-900">
+              {{ worker.experience_years || 0 }} سنة
+            </p>
+          </div>
+
+          <div class="rounded-2xl bg-slate-50 p-5">
+            <p class="text-sm text-slate-500">الحالة</p>
+            <p
+              class="mt-2 font-bold"
+              [class.text-emerald-600]="worker.is_available"
+              [class.text-red-500]="!worker.is_available"
+            >
+              {{ worker.is_available ? "متاح للعمل" : "غير متاح حالياً" }}
+            </p>
+          </div>
+        </div>
+
+        @if (worker.bio) {
+          <div class="border-t border-slate-100 p-6">
+            <h2 class="text-xl font-bold text-slate-900">عن الصنايعي</h2>
+
+            <p class="mt-3 leading-8 text-slate-600">
+              {{ worker.bio }}
+            </p>
+          </div>
+        }
+
+        @if (canRequestService()) {
+          <div
+            id="service-request-form"
+            class="border-t border-slate-100 bg-slate-50 p-6"
+          >
+            <div class="max-w-2xl">
+              <h2 class="text-2xl font-extrabold text-slate-900">اطلب خدمة</h2>
+
+              <p class="mt-2 text-slate-500">
+                اكتب تفاصيل الخدمة ومكان تنفيذها وسيتم إرسال الطلب للصنايعي.
+              </p>
+
+              <div class="mt-6">
+                <app-service-request-form [worker]="worker" />
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>
