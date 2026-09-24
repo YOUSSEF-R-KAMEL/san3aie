@@ -14,31 +14,41 @@ export class ServiceRequestsService {
 
   constructor(private http: HttpClient) {}
 
-  createRequest(
-    data: CreateServiceRequestData
-  ): Observable<{
+  createRequest(data: CreateServiceRequestData): Observable<{
     message: string;
     request: ServiceRequest;
   }> {
     return this.http.post<{
       message: string;
       request: ServiceRequest;
-    }>(
-      `${this.apiUrl}/service-requests`,
-      data
-    );
+    }>(`${this.apiUrl}/service-requests`, data);
   }
 
-  getCustomerRequests(): Observable<any> {
-    return this.http.get(
-      `${this.apiUrl}/customer/requests`
-    );
+  getCustomerRequests(): Observable<{
+    data: ServiceRequest[];
+    current_page: number;
+    last_page: number;
+    total: number;
+  }> {
+    return this.http.get<{
+      data: ServiceRequest[];
+      current_page: number;
+      last_page: number;
+      total: number;
+    }>(`${this.apiUrl}/customer/requests`);
   }
-
-  getWorkerRequests(): Observable<any> {
-    return this.http.get(
-      `${this.apiUrl}/worker/requests`
-    );
+  getWorkerRequests(): Observable<{
+    data: ServiceRequest[];
+    current_page: number;
+    last_page: number;
+    total: number;
+  }> {
+    return this.http.get<{
+      data: ServiceRequest[];
+      current_page: number;
+      last_page: number;
+      total: number;
+    }>(`${this.apiUrl}/worker/requests`);
   }
 
   getRequest(id: number): Observable<{
@@ -46,39 +56,34 @@ export class ServiceRequestsService {
   }> {
     return this.http.get<{
       request: ServiceRequest;
-    }>(
-      `${this.apiUrl}/service-requests/${id}`
-    );
+    }>(`${this.apiUrl}/service-requests/${id}`);
   }
 
   acceptRequest(id: number): Observable<any> {
-    return this.http.post(
-      `${this.apiUrl}/service-requests/${id}/accept`,
-      {}
-    );
+    return this.http.post(`${this.apiUrl}/service-requests/${id}/accept`, {});
   }
 
   rejectRequest(id: number): Observable<any> {
-    return this.http.post(
-      `${this.apiUrl}/service-requests/${id}/reject`,
-      {}
-    );
+    return this.http.post(`${this.apiUrl}/service-requests/${id}/reject`, {});
   }
 
   updateStatus(
     id: number,
-    status: 'in_progress' | 'completed'
+    status: 'in_progress' | 'completed',
   ): Observable<any> {
-    return this.http.post(
-      `${this.apiUrl}/service-requests/${id}/status`,
-      { status }
-    );
+    return this.http.post(`${this.apiUrl}/service-requests/${id}/status`, {
+      status,
+    });
   }
 
   cancelRequest(id: number): Observable<any> {
-    return this.http.post(
-      `${this.apiUrl}/service-requests/${id}/cancel`,
-      {}
-    );
+    return this.http.post(`${this.apiUrl}/service-requests/${id}/cancel`, {});
+  }
+
+  createReview(id: number, rating: number, comment: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/service-requests/${id}/review`, {
+      rating,
+      comment,
+    });
   }
 }

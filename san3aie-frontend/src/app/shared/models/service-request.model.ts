@@ -8,6 +8,13 @@ export type ServiceRequestStatus =
   | 'completed'
   | 'cancelled';
 
+export interface ServiceRequestReview {
+  id: number;
+  rating: number;
+  comment?: string;
+  created_at?: string;
+}
+
 export interface ServiceRequest {
   id: number;
   customer_id: number;
@@ -20,6 +27,11 @@ export interface ServiceRequest {
   created_at: string;
   updated_at: string;
   worker?: Worker;
+  customer?: {
+    id: number;
+    name: string;
+    phone?: string;
+  };
   category?: {
     id: number;
     name: string;
@@ -29,6 +41,7 @@ export interface ServiceRequest {
     id: number;
     name: string;
   };
+  review?: ServiceRequestReview;
 }
 
 export interface CreateServiceRequestData {

@@ -50,11 +50,11 @@
               }
             </div>
 
-            @if (canRequestService()) {
+            @if (worker) {
               <button
                 type="button"
                 (click)="requestService()"
-                class="rounded-xl bg-white px-6 py-3 font-bold text-emerald-700 shadow-sm transition hover:bg-emerald-50"
+                class="rounded-xl bg-emerald-600 px-6 py-3 font-bold text-white transition hover:bg-emerald-700"
               >
                 اطلب خدمة
               </button>

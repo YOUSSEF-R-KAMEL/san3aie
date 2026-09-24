@@ -1,36 +1,34 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Worker } from '../../../shared/models/worker.model';
 import { WorkersService } from '../../../shared/services/workers.service';
 import { AuthService } from '../../../shared/services/auth.service';
-import { ServiceRequestsService } from '../../../shared/services/service-requests.service';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 import { ErrorStateComponent } from '../../../shared/components/error-state/error-state.component';
-import { ToastService } from './../../../shared/services/toast.service';
 import { ServiceRequestFormComponent } from '../../components/service-request-form/service-request-form.component';
+import { ToastService } from '../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-worker-details',
   standalone: true,
   imports: [
-  RouterLink,
+    RouterLink,
     LoadingComponent,
     ErrorStateComponent,
-    ServiceRequestFormComponent
+    ServiceRequestFormComponent,
   ],
   templateUrl: './worker-details.component.html',
 })
 export class WorkerDetailsComponent implements OnInit {
   worker: Worker | null = null;
-
   loading = true;
   error = '';
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private workersService: WorkersService,
     public authService: AuthService,
-    private serviceRequestsService: ServiceRequestsService,
     private toast: ToastService
   ) {}
 
@@ -77,9 +75,16 @@ export class WorkerDetailsComponent implements OnInit {
       return;
     }
 
-    if (!this.canRequestService()) {
+    const user = this.authService.getCurrentUser();
+
+    if (!user) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    if (user.role !== 'customer') {
       this.toast.info(
-        'يجب تسجيل الدخول بحساب عميل لطلب الخدمة.'
+        'طلب الخدمة متاح للعملاء فقط.'
       );
       return;
     }

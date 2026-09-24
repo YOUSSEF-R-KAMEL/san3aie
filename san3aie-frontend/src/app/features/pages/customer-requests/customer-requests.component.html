@@ -1,0 +1,94 @@
+<div class="min-h-screen bg-slate-50 px-4 py-8" dir="rtl">
+  <div class="mx-auto max-w-6xl">
+    <div class="mb-8">
+      <h1 class="text-3xl font-black text-slate-900">طلباتي</h1>
+
+      <p class="mt-2 text-slate-600">تابع جميع طلبات الخدمات التي أرسلتها.</p>
+    </div>
+
+    @if (loading) {
+      <app-loading />
+    }
+
+    @if (!loading && error) {
+      <app-error-state [message]="error" (retry)="loadRequests()" />
+    }
+
+    @if (!loading && !error && requests.length === 0) {
+      <app-empty-state
+        title="لا توجد طلبات"
+        message="لم تقم بإرسال أي طلب خدمة حتى الآن."
+      />
+    }
+
+    @if (!loading && !error && requests.length > 0) {
+      <div class="grid gap-5">
+        @for (request of requests; track request.id) {
+          <article
+            class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
+          >
+            <div
+              class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between"
+            >
+              <div>
+                <h2 class="text-xl font-bold text-slate-900">
+                  {{ request.category?.name || "طلب خدمة" }}
+                </h2>
+
+                <p class="mt-1 text-sm text-slate-500">
+                  الصنايعي:
+                  {{ request.worker?.name || "غير متاح" }}
+                </p>
+              </div>
+
+              <span
+                class="w-fit rounded-full px-4 py-2 text-sm font-bold"
+                [class.bg-amber-50]="request.status === 'pending'"
+                [class.text-amber-700]="request.status === 'pending'"
+                [class.bg-emerald-50]="request.status === 'accepted'"
+                [class.text-emerald-700]="request.status === 'accepted'"
+                [class.bg-red-50]="request.status === 'rejected'"
+                [class.text-red-700]="request.status === 'rejected'"
+                [class.bg-blue-50]="request.status === 'in_progress'"
+                [class.text-blue-700]="request.status === 'in_progress'"
+                [class.bg-green-50]="request.status === 'completed'"
+                [class.text-green-700]="request.status === 'completed'"
+                [class.bg-slate-100]="request.status === 'cancelled'"
+                [class.text-slate-600]="request.status === 'cancelled'"
+              >
+                {{ getStatusLabel(request.status) }}
+              </span>
+            </div>
+
+            <div class="mt-5 grid gap-4 md:grid-cols-2">
+              <div>
+                <p class="text-sm font-bold text-slate-500">وصف المشكلة</p>
+
+                <p class="mt-1 text-slate-800">
+                  {{ request.description }}
+                </p>
+              </div>
+
+              <div>
+                <p class="text-sm font-bold text-slate-500">الموقع</p>
+
+                <p class="mt-1 text-slate-800">
+                  {{ request.location }}
+                </p>
+              </div>
+            </div>
+
+            <div class="mt-5">
+              <a
+                [routerLink]="['/service-requests', request.id]"
+                class="inline-flex rounded-xl bg-emerald-600 px-5 py-2.5 font-bold text-white transition hover:bg-emerald-700"
+              >
+                عرض الطلب
+              </a>
+            </div>
+          </article>
+        }
+      </div>
+    }
+  </div>
+</div>

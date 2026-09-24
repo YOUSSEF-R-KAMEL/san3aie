@@ -47,6 +47,27 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'worker/requests',
+    loadComponent: () =>
+      import('./features/pages/worker-requests/worker-requests.component').then(
+        (component) => component.WorkerRequestsComponent,
+      ),
+  },
+  {
+    path: 'customer/requests',
+    loadComponent: () =>
+      import('./features/pages/customer-requests/customer-requests.component').then(
+        (component) => component.CustomerRequestsComponent,
+      ),
+  },
+  {
+    path: 'service-requests/:id',
+    loadComponent: () =>
+      import('./features/pages/service-request-details/service-request-details.component').then(
+        (component) => component.ServiceRequestDetailsComponent,
+      ),
+  },
+  {
     path: '403',
     loadComponent: () =>
       import('./features/pages/forbidden/forbidden.component').then(

@@ -41,6 +41,22 @@
         >
           حسابي
         </a>
+        <a
+          routerLink="/customer/requests"
+          routerLinkActive="text-emerald-600"
+          class="rounded-xl px-3 py-2 text-sm font-bold text-slate-700 transition hover:bg-slate-100 sm:px-4"
+        >
+          طلباتي
+        </a>
+        @if (authService.hasRole("worker")) {
+          <a
+            routerLink="/worker/requests"
+            routerLinkActive="text-emerald-600"
+            class="rounded-xl px-3 py-2 text-sm font-bold text-slate-700 transition hover:bg-slate-100 sm:px-4"
+          >
+            طلبات العملاء
+          </a>
+        }
 
         <button
           type="button"
